@@ -10,9 +10,7 @@ public class CameraController : MonoBehaviour
     public float cameraSmothFollow;
 
     [SerializeField]
-    private Vector2 verticalViewLimits = new Vector2(-35, 60);
-    [SerializeField]
-    private Vector2 HorizontalViewLimits = new Vector2(-60, 60);
+    private Vector2 verticalViewLimits = new Vector2(-30, 40);
 
     private Transform Player;
     private Transform rootOfPlayer;
@@ -45,11 +43,7 @@ public class CameraController : MonoBehaviour
 
     public void SetTargetPosition()
     {
-        Target = rootOfPlayer.position;
-        Target.z -= Away;
-        Target.y += Up;
-        TargetTransform.position = Target;
-        TargetTransform.SetParent(rootOfPlayer, true);
+        TargetTransform.position = rootOfPlayer.position + Vector3.up * Up - rootOfPlayer.forward * Away;
     }
 
     // Update is called once per frame
@@ -71,11 +65,22 @@ public class CameraController : MonoBehaviour
         {
             rootOfPlayer.rotation = Quaternion.Euler(mouseY, mouseX, 0f);
         }
-
+        
         rootOfPlayer.SetPositionAndRotation(Player.position, rootOfPlayer.rotation);
 
+        SetTargetPosition();
+        WallCollision();
 
         transform.position = Vector3.Lerp(transform.position, TargetTransform.position, cameraSmothFollow*Time.deltaTime);
         transform.LookAt(Player.position);
+    }
+
+    private void WallCollision()
+    {
+        RaycastHit Hit;
+        if (Physics.Linecast(rootOfPlayer.position, TargetTransform.position, out Hit))
+        {
+            TargetTransform.position = new Vector3(Hit.point.x, TargetTransform.position.y,Hit.point.z);
+        }
     }
 }

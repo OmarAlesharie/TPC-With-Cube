@@ -8,10 +8,14 @@ public class TPCharacterController : MonoBehaviour
     private float Vertical = 0f;
 
     [SerializeField]
-    private float Speed = 3;
+    private float Speed = 3f;
 
-    [SerializeField]
-    Transform CameraTransform;
+    private Transform CameraTransform;
+
+    private Vector3 InputDirection;
+    private Vector3 MoveDirection;
+    private Vector3 CamDirection;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,9 +36,22 @@ public class TPCharacterController : MonoBehaviour
         Horizontal = Input.GetAxis("Horizontal");
         Vertical = Input.GetAxis("Vertical");
         
-        Vector3 direction = new Vector3(Horizontal, 0.0f, Vertical);
-        Vector3 RelativePosition = new Vector3(CameraTransform.position.x, CameraTransform.position.y, 0.0f);
-        
-        transform.Translate(direction * Speed * Time.deltaTime, CameraTransform);
+        InputDirection = new Vector3(Horizontal, 0.0f, Vertical);
+
+        CamDirection = CameraTransform.forward;
+        CamDirection.y = 0f;
+
+        Quaternion ReferenceRotation = Quaternion.FromToRotation(Vector3.forward, CamDirection);
+
+        MoveDirection = ReferenceRotation * InputDirection;
+
+        Debug.DrawRay(transform.position, transform.forward, Color.blue);
+        Debug.DrawRay(transform.position, MoveDirection, Color.red);
+
+        if (Horizontal != 0f || Vertical != 0f)
+        {
+            transform.forward = MoveDirection;
+            transform.position += transform.forward * Speed * Time.deltaTime;
+        }
     }
 }
