@@ -11,6 +11,8 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private LayerMask GroundLayer;
 
+    [SerializeField]
+    private float UpOffSetFromtheGround = 0.3f;
     private Transform Player;
     private Transform rootOfPlayer;
     private Vector3 Target;
@@ -77,7 +79,7 @@ public class CameraController : MonoBehaviour
     {
         if (Physics.Linecast(rootOfPlayer.position, TargetTransform.position, out RaycastHit Hit, GroundLayer))
         {
-            TargetTransform.position = new Vector3(Hit.point.x, Hit.point.y, Hit.point.z);
+            TargetTransform.position = new Vector3(Hit.point.x, Hit.point.y + UpOffSetFromtheGround, Hit.point.z);
         }
     }
 }
