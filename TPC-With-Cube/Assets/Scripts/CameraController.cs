@@ -1,16 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour
 {
     public float Away;
     public float Up;
     public float cameraSmothFollow;
-
-    [SerializeField]
-    private Vector2 verticalViewLimits = new Vector2(-7, 27);
 
     [SerializeField]
     private LayerMask GroundLayer;
@@ -24,8 +20,7 @@ public class CameraController : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-         
+    {  
         Player = GameObject.FindGameObjectWithTag("Player").transform;
         rootOfPlayer = new GameObject("rootOfPlayer").transform;
 
