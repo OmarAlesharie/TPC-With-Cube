@@ -11,15 +11,13 @@ public class CameraController : MonoBehaviour
 
     [SerializeField]
     private Vector2 verticalViewLimits = new Vector2(-30, 40);
-    [SerializeField]
-    private float RotationSpeed = 3;
 
     private Transform Player;
     private Transform rootOfPlayer;
     private Vector3 Target;
     private Transform TargetTransform;
     private float mouseX, mouseY;
-    private float LastMouseX, LastMouseY;
+    private Quaternion PrevRotation;
 
 
     // Start is called before the first frame update
@@ -36,9 +34,6 @@ public class CameraController : MonoBehaviour
         rootOfPlayer.forward = Player.forward;
         transform.LookAt(Player.position);
 
-        LastMouseX = Input.GetAxis("Mouse X");
-        LastMouseY = Input.GetAxis("Mouse Y");
-
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -51,25 +46,17 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        mouseX += Input.GetAxis("Mouse X");
-        mouseY -= Input.GetAxis("Mouse Y");
+        mouseX = Input.GetAxis("Mouse X");
+        mouseY = Input.GetAxis("Mouse Y");
 
         if (Input.GetKey(KeyCode.Q))
         {
             rootOfPlayer.forward = Player.forward;
         }
 
-        mouseY = Mathf.Clamp(mouseY, verticalViewLimits.x, verticalViewLimits.y);
 
-        if (mouseX - LastMouseX != 0 || mouseY - LastMouseY != 0)
-        {
-            //rootOfPlayer.rotation = Quaternion.Euler(mouseY, mouseX, 0f);
-            rootOfPlayer.Rotate(Vector3.up, (mouseX - LastMouseX) * RotationSpeed);
-            rootOfPlayer.Rotate(Vector3.right, (mouseY - LastMouseY) * RotationSpeed);
-
-            LastMouseX = mouseX;
-            LastMouseY = mouseY;
-        }
+        Quaternion newRotation = Quaternion.Euler(-mouseY, mouseX, 0f);
+        rootOfPlayer.rotation *= newRotation;
 
         rootOfPlayer.position = Player.position;
 
