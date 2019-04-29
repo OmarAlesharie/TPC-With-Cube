@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 221673878}
   - component: {fileID: 221673877}
   - component: {fileID: 221673876}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -570,8 +570,11 @@ MonoBehaviour:
   Away: 5
   Up: 2
   cameraSmothFollow: 3
-  verticalViewLimits: {x: -30, y: 40}
-  RotationSpeed: 3
+  verticalViewLimits: {x: -7, y: 27}
+  GroundLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  Info: {fileID: 0}
 --- !u!1001 &985492505
 PrefabInstance:
   m_ObjectHideFlags: 0

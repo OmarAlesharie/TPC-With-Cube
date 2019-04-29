@@ -10,7 +10,10 @@ public class CameraController : MonoBehaviour
     public float cameraSmothFollow;
 
     [SerializeField]
-    private Vector2 verticalViewLimits = new Vector2(-30, 40);
+    private Vector2 verticalViewLimits = new Vector2(-7, 27);
+
+    [SerializeField]
+    private LayerMask GroundLayer;
 
     private Transform Player;
     private Transform rootOfPlayer;
@@ -18,7 +21,6 @@ public class CameraController : MonoBehaviour
     private Transform TargetTransform;
     private float mouseX, mouseY;
     private Quaternion PrevRotation;
-
 
     // Start is called before the first frame update
     void Start()
@@ -54,14 +56,15 @@ public class CameraController : MonoBehaviour
             rootOfPlayer.forward = Player.forward;
         }
 
-
         Quaternion newRotation = Quaternion.Euler(-mouseY, mouseX, 0f);
-        rootOfPlayer.rotation *= newRotation;
+        Quaternion AddedRotation = rootOfPlayer.rotation * newRotation;
 
+        rootOfPlayer.rotation *= newRotation;
         rootOfPlayer.position = Player.position;
 
         SetTargetPosition();
         WallCollision();
+        GroundCollision();
 
         transform.position = Vector3.Lerp(transform.position, TargetTransform.position, cameraSmothFollow*Time.deltaTime);
         transform.LookAt(Player.position);
@@ -72,6 +75,14 @@ public class CameraController : MonoBehaviour
         if (Physics.Linecast(rootOfPlayer.position, TargetTransform.position, out RaycastHit Hit))
         {
             TargetTransform.position = new Vector3(Hit.point.x, TargetTransform.position.y, Hit.point.z);
+        }
+    }
+
+    private void GroundCollision()
+    {
+        if (Physics.Linecast(rootOfPlayer.position, TargetTransform.position, out RaycastHit Hit, GroundLayer))
+        {
+            TargetTransform.position = new Vector3(Hit.point.x, Hit.point.y, Hit.point.z);
         }
     }
 }
