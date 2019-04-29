@@ -39,6 +39,7 @@ public class CameraController : MonoBehaviour
 
     public void SetTargetPosition()
     {
+        rootOfPlayer.position = Player.position;
         TargetTransform.position = rootOfPlayer.position + Vector3.up * Up - rootOfPlayer.forward * Away;
     }
 
@@ -57,7 +58,7 @@ public class CameraController : MonoBehaviour
         Quaternion AddedRotation = rootOfPlayer.rotation * newRotation;
 
         rootOfPlayer.rotation *= newRotation;
-        rootOfPlayer.position = Player.position;
+        
 
         SetTargetPosition();
         WallCollision();
